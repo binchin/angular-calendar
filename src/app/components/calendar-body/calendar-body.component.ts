@@ -23,7 +23,6 @@ import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 export class CalendarBodyComponent {
   @Input() calendarDates: CalendarDate[] = [];
   readonly dialog = inject(MatDialog);
-  public appointments: Appointment[] = [];
 
   openAppointmentForm(calendarDate: CalendarDate): void {
     const dialogRef = this.dialog.open(AppointmentFormComponent, {
@@ -31,41 +30,43 @@ export class CalendarBodyComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
       if (result) {
         const selectedDate = this.calendarDates.filter(
           (date) => date.date === result.date.date
         );
         Object.assign(selectedDate[0], { appointments: result });
-        console.log(selectedDate);
-        console.log(this.appointments);
       }
     });
   }
 
   drop(event: CdkDragDrop<CalendarDate[]>) {
     const droppedElement = event.item.element.nativeElement as HTMLElement;
+    console.log(droppedElement);
     const droppedFromTarget = event.container.element
       .nativeElement as HTMLElement;
+    console.log(droppedFromTarget);
     const target = event.event.target as HTMLElement;
     const droppedTo = +target.innerText;
     const droppedFrom = +droppedFromTarget.childNodes[0].textContent!.trim();
-    console.log(droppedFromTarget);
+    console.log(droppedFrom);
+    console.log(droppedTo);
 
-    this.calendarDates.forEach((date) => {
-      if (date.day === droppedTo) {
-        console.log('i m here', date);
-        Object.assign(date, {
-          appointments: { title: droppedElement.innerText },
-        });
-      }
-      if (date.day === droppedFrom) {
-        Object.assign(date, {
-          appointments: { title: '' },
-        });
-      }
-    });
-    console.log(this.calendarDates);
+    if (droppedTo > 0) {
+      this.calendarDates.forEach((date) => {
+        if (date.day === droppedTo) {
+          Object.assign(date, {
+            appointments: {
+              title: droppedElement.childNodes[0].textContent!.trim(),
+            },
+          });
+        }
+        if (date.day === droppedFrom && droppedFrom != droppedTo) {
+          Object.assign(date, {
+            appointments: { title: '' },
+          });
+        }
+      });
+    }
   }
 
   deleteAppointment(calendarDate: CalendarDate): void {
@@ -74,15 +75,11 @@ export class CalendarBodyComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log(result);
       if (result) {
-        console.log(result);
         const selectedDate = this.calendarDates.filter(
           (date) => date.date === result.calendarDate.date
         );
         delete selectedDate[0].appointments;
-        console.log(selectedDate);
-        console.log(this.appointments);
       }
     });
   }

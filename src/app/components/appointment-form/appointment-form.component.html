@@ -7,7 +7,12 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button (click)="onClose()">Close</button>
-  <button mat-button (click)="addAppointment()" cdkFocusInitial>
+  <button
+    class="submit-btn"
+    mat-button
+    (click)="addAppointment()"
+    cdkFocusInitial
+  >
     Add Appointment
   </button>
 </mat-dialog-actions>

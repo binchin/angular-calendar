@@ -1,16 +1,22 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+interface DateInfo {
+  month: number;
+  year: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarService {
-  currentDate = new Date();
-  private dateSubject = new BehaviorSubject<any>({
+  private currentDate = new Date();
+  private dateSubject = new BehaviorSubject<DateInfo>({
     month: this.currentDate.getMonth(),
     year: this.currentDate.getFullYear(),
   });
-  date$ = this.dateSubject.asObservable();
+  date$: Observable<DateInfo> = this.dateSubject.asObservable();
+
   constructor() {}
 
   onDateChange(month: number, year: number): void {

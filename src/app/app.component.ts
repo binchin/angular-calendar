@@ -4,7 +4,6 @@ import { RouterOutlet } from '@angular/router';
 import { CalendarBodyComponent } from './components/calendar-body/calendar-body.component';
 import { CalendarHeaderComponent } from './components/calendar-header/calendar-header.component';
 import { CalendarService } from './services/calendar.service';
-import { of } from 'rxjs';
 import { CalendarDate } from './Interfaces/date.interface';
 @Component({
   selector: 'app-root',
@@ -28,20 +27,25 @@ export class AppComponent {
     this.getAllDatesInMonth();
   }
 
-  getAllDatesInMonth(): any {
-    this.calendarService.date$.subscribe((date) => {
-      this.currentMonth = date.month;
-      this.currentYear = date.year;
-      const daysInMonth = new Date(
-        this.currentYear,
-        this.currentMonth + 1,
-        0
-      ).getDate();
-      const dates: CalendarDate[] = [];
-      this.populateDatesInCalendar(dates, daysInMonth);
-      this.createEmptySpaces(dates);
-      this.allDatesInAMonth = dates;
-    });
+  getAllDatesInMonth(): void {
+    this.calendarService.date$.subscribe(
+      (date) => {
+        this.currentMonth = date.month;
+        this.currentYear = date.year;
+        const daysInMonth = new Date(
+          this.currentYear,
+          this.currentMonth + 1,
+          0
+        ).getDate();
+        const dates: CalendarDate[] = [];
+        this.populateDatesInCalendar(dates, daysInMonth);
+        this.createEmptySpaces(dates);
+        this.allDatesInAMonth = dates;
+      },
+      (error) => {
+        console.error('Error fetching dates:', error);
+      }
+    );
   }
 
   populateDatesInCalendar(dates: CalendarDate[], daysInMonth: number): void {
@@ -57,7 +61,7 @@ export class AppComponent {
 
   createEmptySpaces(dates: CalendarDate[]): void {
     const firstDayOfMonth = +dates[0].dayOfWeek;
-    for (let day = 1; day <= firstDayOfMonth; day++) {
+    for (let day = 0; day < firstDayOfMonth; day++) {
       dates.unshift({
         day: '',
         dayOfWeek: '',

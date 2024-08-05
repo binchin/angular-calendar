@@ -20,14 +20,16 @@
       >
         <span
           class="day-span"
-          (click)="calendarDate.day ? openAppointmentForm(calendarDate) : false"
-          >{{ calendarDate?.day }}</span
+          (click)="calendarDate.day ? openAppointmentForm(calendarDate) : null"
         >
+          {{ calendarDate?.day }}
+        </span>
         <span
           *ngIf="calendarDate.appointments?.title"
           class="event-title"
           cdkDrag
-          >{{ calendarDate.appointments?.title }}
+        >
+          {{ calendarDate.appointments?.title }}
           <div
             (click)="deleteAppointment(calendarDate)"
             *ngIf="calendarDate.appointments?.title"
