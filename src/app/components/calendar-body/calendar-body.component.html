@@ -1,0 +1,42 @@
+<div class="calendar-container">
+  <div class="calendar">
+    <div class="calendar-header">
+      <div>Sun</div>
+      <div>Mon</div>
+      <div>Tue</div>
+      <div>Wed</div>
+      <div>Thu</div>
+      <div>Fri</div>
+      <div>Sat</div>
+    </div>
+    <div class="calendar-body">
+      <!-- Populate days here -->
+      <div
+        cdkDropList
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListData]="calendarDates"
+        *ngFor="let calendarDate of calendarDates"
+        class="day"
+      >
+        <span
+          class="day-span"
+          (click)="calendarDate.day ? openAppointmentForm(calendarDate) : false"
+          >{{ calendarDate?.day }}</span
+        >
+        <span
+          *ngIf="calendarDate.appointments?.title"
+          class="event-title"
+          cdkDrag
+          >{{ calendarDate.appointments?.title }}
+          <div
+            (click)="deleteAppointment(calendarDate)"
+            *ngIf="calendarDate.appointments?.title"
+            class="material-symbols-outlined delete-icon"
+          >
+            delete
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
